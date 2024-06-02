@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import styles from '~/styles/style.css?url';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import { QueryClientProvider } from '@tanstack/react-query';
