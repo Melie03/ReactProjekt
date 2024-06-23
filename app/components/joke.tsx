@@ -1,5 +1,8 @@
 import {Joke} from "~/models/joke";
 import {useState} from "react";
+import {Heart} from "lucide-react";
+import {dislikeAction, likeAction} from "~/store.client/like-reducer";
+import {useAppDispatch, useAppSelector} from "~/store.client/store";
 
 type JokeInput = {
     joke: Joke;
@@ -7,6 +10,10 @@ type JokeInput = {
 
 export function JokeCard({ joke, allCollections }) {
     const [selectedCollections, setSelectedCollections] = useState<{ [key: string]: string }>({});
+    const dispatch = useAppDispatch();
+    const currentLikedJokes = useAppSelector((state) => {
+        return state.joke.jokeIdArray;
+    });
 
 
     const handleSelectionChange = (jokeId, newValue) => {
@@ -25,12 +32,30 @@ export function JokeCard({ joke, allCollections }) {
         }
     };
 
+    const likeButtonClicked = () => {
+        console.log('liked');
+        dispatch(likeAction({jokeId: joke.id}));
+        console.log('currentLikedJokes',currentLikedJokes)
+    };
+    const dislikeButtonClicked = () => {
+        console.log('disliked');
+        dispatch(dislikeAction({jokeId: joke.id}));
+        console.log('currentLikedJokes',currentLikedJokes)
+    };
+
+    const isCurrentlyLiked = currentLikedJokes.find(jId => jId === joke.id)
+
     //const collections = ["Favorite Jokes", "Programming Jokes", "Random Jokes"];
     const collections = allCollections;
 
     return (
         <div key={joke.id} className="p-4 bg-white bg-opacity-30 rounded-lg shadow-md">
             <p className="text-xl italic">{joke.setup}</p>
+            {isCurrentlyLiked ? (
+                <Heart onClick={dislikeButtonClicked} fill="red"/>
+            ) : (
+                <Heart onClick={likeButtonClicked}/>
+            )}
             <p className="text-2xl font-semibold mt-2 italic">{joke.punchline}</p>
             <div className="mt-4">
                 <label htmlFor={`select-${joke.id}`} className="block mb-2">Add to Collection:</label>

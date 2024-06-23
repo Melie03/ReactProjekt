@@ -1,4 +1,5 @@
 import { Link } from '@remix-run/react';
+import {Heart} from "lucide-react";
 
 export function NavBar() {
   return (
@@ -13,6 +14,9 @@ export function NavBar() {
         </Link>
         <Link to="/app/collections" className="px-3 py-1 font-medium hover:bg-accent rounded-sm">
           Collections
+        </Link>
+        <Link to="/app/likedjokes" className="px-3 py-1 font-medium hover:bg-accent rounded-sm">
+          <Heart fill="white"></Heart>
         </Link>
       </nav>
     </header>
