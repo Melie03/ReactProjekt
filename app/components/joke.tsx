@@ -1,5 +1,6 @@
 import {Joke} from "~/models/joke";
 import {useState} from "react";
+import {addJokesToCollection} from "~/storage.server/collection-storage";
 
 type JokeInput = {
     joke: Joke;
@@ -8,18 +9,24 @@ type JokeInput = {
 export function JokeCard({ joke, allCollections }) {
     const [selectedCollections, setSelectedCollections] = useState<{ [key: string]: string }>({});
 
-
     const handleSelectionChange = (jokeId, newValue) => {
+        console.log('handleSelectionChange');
         setSelectedCollections(prev => ({
             ...prev,
             [jokeId]: newValue
         }));
     };
 
-    const handleAddToCollection = (joke: Joke) => {
-        const collection = selectedCollections[joke.id];
-        if (collection) {
-            console.log(`Adding joke to ${collection}`, joke);
+    const handleAddToCollection = async (joke: Joke) => {
+        const collectionId = selectedCollections[joke.id];
+        console.log(allCollections)
+        const collection = collections.find(col => col.id === collectionId);
+        if (collectionId) {
+            console.log(collection);
+            collection.jokes.push(joke.id);
+            console.log(collection);
+            const updated = addJokesToCollection(collectionId, collection.jokes)
+            console.log(updated);
         } else {
             alert("Please select a collection first.");
         }
