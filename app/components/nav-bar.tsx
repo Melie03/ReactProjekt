@@ -11,6 +11,9 @@ export function NavBar() {
         <Link to="/jokes" className="px-3 py-1 font-medium hover:bg-accent rounded-sm">
           Jokes
         </Link>
+        <Link to="/app/collections" className="px-3 py-1 font-medium hover:bg-accent rounded-sm">
+          Collections
+        </Link>
       </nav>
     </header>
   );
