@@ -2,5 +2,5 @@ export type Collection = {
     id: string;
     title: string;
     createdAt: string;
-    jokes: number[];
+    jokes: string[];
 }

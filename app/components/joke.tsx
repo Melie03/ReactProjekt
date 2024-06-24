@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { dislikeAction, likeAction } from '~/store.client/like-reducer';
 import { useAppDispatch, useAppSelector } from '~/store.client/store';
+import { addJokesToCollection } from '~/apis/collection-api';
 
 type JokeCardProps = {
     joke: Joke;
@@ -22,10 +23,16 @@ export function JokeCard({ joke, allCollections }: JokeCardProps) {
         }));
     };
 
-    const handleAddToCollection = (joke: Joke) => {
-        const collection = selectedCollections[joke.id];
-        if (collection) {
+    const handleAddToCollection = async (joke: Joke) => {
+        const collectionId = selectedCollections[joke.id];
+        console.log(allCollections)
+        const collection = allCollections.find(col => col.id === collectionId);
+        if (collection && collectionId) {
             console.log(`Adding joke to ${collection}`, joke);
+            collection.jokes.push(joke.id);
+            console.log(collection);
+            const updated = await addJokesToCollection(collectionId, collection.jokes)
+            console.log(updated);
         } else {
             alert('Please select a collection first.');
         }
