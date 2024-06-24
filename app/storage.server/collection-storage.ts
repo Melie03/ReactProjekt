@@ -1,15 +1,12 @@
-/* This is only an example and can be deleted */
-
 import { createFeatureStorage } from './storage-utils';
-import {Collection} from "~/models/collection";
-
+import { Collection } from '~/models/collection';
 
 /* Create the storage with a unique name */
 const collectionStorage = createFeatureStorage<Collection>('collection');
 
 /* Expose the functions you need in your application */
 export const getAllCollections = () => {
-  return collectionStorage.getAll();
+return collectionStorage.getAll();
 };
 
 export const getCollectionById = (collectionId: string) => {
@@ -18,7 +15,7 @@ export const getCollectionById = (collectionId: string) => {
 
 export const createCollection = (title: string) => {
   const date = new Date().toISOString();
-  const newCollection = { title, createdAt: date, jokes: []};
+  const newCollection = { title, createdAt: date, jokes: [] };
   return collectionStorage.create(newCollection);
 };
 
