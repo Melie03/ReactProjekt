@@ -1,72 +1,74 @@
-import {Joke} from "~/models/joke";
-import {useState} from "react";
-import {Heart} from "lucide-react";
-import {dislikeAction, likeAction} from "~/store.client/like-reducer";
-import {useAppDispatch, useAppSelector} from "~/store.client/store";
+import { Joke } from '~/models/joke';
+import { Collection } from '~/models/collection';
+import { useState } from 'react';
+import { Heart } from 'lucide-react';
+import { dislikeAction, likeAction } from '~/store.client/like-reducer';
+import { useAppDispatch, useAppSelector } from '~/store.client/store';
+import { addJokesToCollection } from '~/apis/collection-api';
 
-type JokeInput = {
+type JokeCardProps = {
     joke: Joke;
+    allCollections: Collection[];
 };
 
-export function JokeCard({ joke, allCollections }) {
+export function JokeCard({ joke, allCollections }: JokeCardProps) {
     const [selectedCollections, setSelectedCollections] = useState<{ [key: string]: string }>({});
     const dispatch = useAppDispatch();
-    const currentLikedJokes = useAppSelector((state) => {
-        return state.joke.jokeIdArray;
-    });
+    const currentLikedJokes = useAppSelector((state) => state.joke.jokeIdArray);
 
-
-    const handleSelectionChange = (jokeId, newValue) => {
-        setSelectedCollections(prev => ({
+    const handleSelectionChange = (jokeId: string, newValue: string) => {
+        setSelectedCollections((prev) => ({
             ...prev,
-            [jokeId]: newValue
+            [jokeId]: newValue,
         }));
     };
 
-    const handleAddToCollection = (joke: Joke) => {
-        const collection = selectedCollections[joke.id];
-        if (collection) {
+    const handleAddToCollection = async (joke: Joke) => {
+        const collectionId = selectedCollections[joke.id];
+        console.log(allCollections)
+        const collection = allCollections.find(col => col.id === collectionId);
+        if (collection && collectionId) {
             console.log(`Adding joke to ${collection}`, joke);
+            collection.jokes.push(joke.id);
+            console.log(collection);
+            const updated = await addJokesToCollection(collectionId, collection.jokes)
+            console.log(updated);
         } else {
-            alert("Please select a collection first.");
+            alert('Please select a collection first.');
         }
     };
 
     const likeButtonClicked = () => {
         console.log('liked');
-        dispatch(likeAction({jokeId: joke.id}));
-        console.log('currentLikedJokes',currentLikedJokes)
+        dispatch(likeAction({ jokeId: joke.id }));
     };
+
     const dislikeButtonClicked = () => {
         console.log('disliked');
-        dispatch(dislikeAction({jokeId: joke.id}));
-        console.log('currentLikedJokes',currentLikedJokes)
+        dispatch(dislikeAction({ jokeId: joke.id }));
     };
 
-    const isCurrentlyLiked = currentLikedJokes.find(jId => jId === joke.id)
-
-    //const collections = ["Favorite Jokes", "Programming Jokes", "Random Jokes"];
-    const collections = allCollections;
+    const isCurrentlyLiked = currentLikedJokes?.includes(joke.id) ?? false; // Sicherstellen, dass currentLikedJokes nicht null ist
 
     return (
         <div key={joke.id} className="p-4 bg-white bg-opacity-30 rounded-lg shadow-md">
             <p className="text-xl italic">{joke.setup}</p>
             {isCurrentlyLiked ? (
-                <Heart onClick={dislikeButtonClicked} fill="red"/>
+                <Heart onClick={dislikeButtonClicked} fill="red" />
             ) : (
-                <Heart onClick={likeButtonClicked}/>
+                <Heart onClick={likeButtonClicked} />
             )}
             <p className="text-2xl font-semibold mt-2 italic">{joke.punchline}</p>
             <div className="mt-4">
                 <label htmlFor={`select-${joke.id}`} className="block mb-2">Add to Collection:</label>
                 <select
                     id={`select-${joke.id}`}
-                    value={selectedCollections[joke.id] || ""}
+                    value={selectedCollections[joke.id] || ''}
                     onChange={(e) => handleSelectionChange(joke.id, e.target.value)}
                     className="p-2 bg-white text-black rounded"
                 >
                     <option value="">Select a collection</option>
-                    {collections.map((collection) => (
+                    {allCollections.map((collection) => (
                         <option key={collection.id} value={collection.id}>
                             {collection.title}
                         </option>
@@ -80,5 +82,5 @@ export function JokeCard({ joke, allCollections }) {
                 </button>
             </div>
         </div>
-    )
+    );
 }

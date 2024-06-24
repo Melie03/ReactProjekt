@@ -23,7 +23,7 @@ export default function CreateCollectionPage() {
         mutationFn: (title: string) => createCollection(title),
         onSuccess: () => {
             queryClient.invalidateQueries(collectionQueryOptions);
-            navigate('/collections');
+            navigate('/app/collections');
         },
     });
 
