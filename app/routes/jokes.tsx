@@ -29,6 +29,17 @@ const Jokes = () => {
     getJokes();
   }, []);
 
+  const fetchMoreJokes = async () => {
+    try {
+      const jokesData = await fetchTenRandomJokesFromApi();
+      setJokes(prevJokes => [...prevJokes, ...jokesData]);
+    } catch (error) {
+      console.error('Failed to fetch jokes:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
 
   return (
@@ -45,6 +56,10 @@ const Jokes = () => {
                 ))}
               </div>
           )}
+          <button className="mt-8 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-bold"
+                  onClick={fetchMoreJokes}>
+            Load more
+          </button>
         </div>
       </main>
   );
