@@ -17,7 +17,6 @@ const AppCollections = () => {
         <main className="min-h-screen p-10 bg-gradient-to-r from-blue-400 via-green-500 to-yellow-500 text-white">
             <div className="max-w-4xl mx-auto bg-white bg-opacity-20 backdrop-blur-md p-8 rounded-lg shadow-lg">
                 <h1 className="text-4xl font-bold mb-8 text-center">Collections</h1>
-                Plus Collection
                 <button onClick={goToNewCollections} className="p-2 bg-blue-500 text-white rounded">
                     Create New Collection
                 </button>

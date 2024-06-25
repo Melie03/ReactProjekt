@@ -36,7 +36,7 @@ export default function CollectionDetail() {
         <main className="min-h-screen p-10 bg-gradient-to-r from-blue-400 via-green-500 to-yellow-500 text-white">
             <div className="max-w-4xl mx-auto bg-white bg-opacity-20 backdrop-blur-md p-8 rounded-lg shadow-lg">
                 <h2 className="text-2xs mb-1 text-center">Collection</h2>
-                <h1 className="text-4xl font-bold mb-8 text-center">List of Jokes</h1>
+                <h1 className="text-4xl font-bold mb-8 text-center">{collection.title}</h1>
                 <div className="space-y-6">
                     {jokes.length ? (
                         jokes.map((joke: Joke) => (
